@@ -10,10 +10,10 @@ pipeline {
             }
         }
         
-        stage('Test') {
+        stage('Unit Test') {
             steps {
                 sh '/var/jenkins_home/maven/apache-maven-3.6.0/bin/mvn test'
-                echo "Test Complete"
+                echo "Unit Test Complete"
             }
            
             post {
@@ -22,6 +22,20 @@ pipeline {
                 }
             }
         }
+         stage('Integration Test') {
+            steps {
+                sh '/var/jenkins_home/maven/apache-maven-3.6.0/bin/mvn verify'
+                echo "Integration Test Complete"
+            }
+           
+            post {
+                always {
+                    junit 'target/failsafe-reports/*.xml'
+                }
+            }
+        }
+        
+        
         /*
         stage('Deliver') {
             steps {
